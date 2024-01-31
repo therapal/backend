@@ -1,22 +1,16 @@
-var createError = require('http-errors');
-var express = require('express');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-
-var clientRouter = require('./routes/v1/client');
-var therapistRouter = require('./routes/v1/therapist');
-var authRouter = require('./routes/v1/auth');
-
-var app = express();
+const createError = require('http-errors');
+const express = require('express');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const app = express();
+const routes = require('./routes');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use('/api/v1/client', clientRouter);
-app.use('/api/v1/therapist', therapistRouter);
-app.use('/api/v1/auth', authRouter);
+app.use(routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

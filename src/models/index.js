@@ -1,30 +1,37 @@
-'use strict';
+"use strict";
 
-const fs = require('fs');
-const path = require('path');
-const Sequelize = require('sequelize');
+const fs = require("fs");
+const path = require("path");
+const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
-const config = require('../config/index.js');
+const config = require("../config/index.js");
 const db = {};
 
-let  sequelize = new Sequelize(config.database.database, config.database.username, config.database.password, config.database);
+const sequelize = new Sequelize(
+  config.database.database,
+  config.database.username,
+  config.database.password,
+  config.database,
+);
 
-fs
-  .readdirSync(__dirname)
-  .filter(file => {
+fs.readdirSync(__dirname)
+  .filter((file) => {
     return (
-      file.indexOf('.') !== 0 &&
+      file.indexOf(".") !== 0 &&
       file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
+      file.slice(-3) === ".js" &&
+      file.indexOf(".test.js") === -1
     );
   })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes,
+    );
     db[model.name] = model;
   });
 
-Object.keys(db).forEach(modelName => {
+Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }

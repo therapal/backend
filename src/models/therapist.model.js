@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
       gender: DataTypes.ENUM("male", "female", "neutral"),
       /* Sample JSON data -> days: [monday, tues], time: [morning, midDay, evening] */
       availability: DataTypes.JSON,
-      firstName: DataTypes.STRING,
-      lastName: DataTypes.STRING,
+      fullName: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         unique: true,
       },
+      ratePerHour: DataTypes.INTEGER,
       isVerified: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,

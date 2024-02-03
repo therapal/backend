@@ -7,10 +7,11 @@ const {
 const { jwtSecret, NODE_ENV } = require("../config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { catchAsyncErrors } = require("../routes/middlewares/errors");
 
-module.exports.register = async function (req, res, next) {
-  const { email, name, password, role } = req.body;
-  if (!email || !name || !password) {
+module.exports.register = catchAsyncErrors(async function (req, res, next) {
+  const { email, fullName, password, role } = req.body;
+  if (!email || !fullName || !password) {
     return next(new ApiError("Invalid request body", 400));
   }
   if (!["therapist", "client", "admin"].includes(role)) {
@@ -19,8 +20,7 @@ module.exports.register = async function (req, res, next) {
   const hashedPassword = await generatePasswordHash(password);
   const user = {
     email,
-    firstName: name.trim().split(" ")[0],
-    lastName: name.trim().split(" ")[1],
+    fullName,
     isVerified: false,
     password: hashedPassword,
   };
@@ -39,40 +39,46 @@ module.exports.register = async function (req, res, next) {
     success: true,
     message: "User registered",
   });
-};
+});
 
-module.exports.login = async function (req, res, next) {
+module.exports.sendVerificationEmail = catchAsyncErrors(
+  async function (req, res, next) {},
+);
+module.exports.login = catchAsyncErrors(async function (req, res, next) {
   const { email, password, role } = req.body;
   let user;
   switch (role) {
     case "therapist":
       user = await Therapist.findOne({
         where: { email },
-        attributes: ["password"],
+        attributes: ["password", "isVerified"],
       });
       user.role = "therapist";
       return;
     case "client":
       user = await Client.findOne({
         where: { email },
-        attributes: ["password"],
+        attributes: ["password", "isVerified"],
       });
       user.role = "client";
       return;
     default:
       if (!user) {
-        return next(new ApiError("Incorrect credentials"));
+        return next(new ApiError("Incorrect credentials", 400));
       }
-      next();
+  }
+  if (!user.isVerified) {
+    return next(new ApiError("Account is not yet verified", 401));
   }
   const compare = bcrypt.compareSync(password, user.password);
   if (!compare) {
-    return next(new ApiError("Incorrect credentials"));
+    return next(new ApiError("Incorrect credentials", 400));
   }
 
   const token = await createJwtToken({
     id: user.id,
     role: user.role,
+    isVerified: user.isVerified,
   });
   res.cookie("token", token, {
     signed: true,
@@ -83,9 +89,9 @@ module.exports.login = async function (req, res, next) {
   });
   res.status(200).json({
     success: true,
-    message: "You are logged in",
+    message: "You are now logged in",
   });
-};
+});
 
 async function createJwtToken(user) {
   const maxAge = "30 mins";
@@ -93,6 +99,7 @@ async function createJwtToken(user) {
     {
       id: user.id,
       role: user.role,
+      isVerified: user.isVerified,
     },
     jwtSecret,
     { expiresIn: maxAge },

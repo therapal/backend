@@ -18,3 +18,7 @@ module.exports.sessionSecret = process.env.sessionSecret;
 module.exports.jwtSecret = process.env.jwtSecret;
 module.exports.cookieSecret = process.env.cookieSecret;
 module.exports.NODE_ENV = process.env.NODE_ENV;
+module.exports.paystackConfig = {
+  pubKey: process.env.paystackPubKey,
+  privKey: process.env.paystackPrivKey,
+};

@@ -15,15 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    chatAppointmentId: {
-      type: DataTypes.UUID,
-      references: {
-        model: "chatAppointments",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
     sender: {
       type: DataTypes.UUID,
       allowNull: false,

@@ -2,10 +2,14 @@ const express = require("express");
 const router = express.Router();
 const {
   createAppointment,
-  editAppointment,
+  verifyAppointment,
 } = require("../../controller/appointment.controller.js");
-const { authenticateUser } = require("../middlewares/auth");
+const { authenticateUser, validateRole } = require("../middlewares/auth");
 
-router.route("/").post(authenticateUser, createAppointment);
-router.route("/:id").post(authenticateUser, editAppointment);
+router
+  .route("/")
+  .post(authenticateUser, validateRole("client"), createAppointment);
+router
+  .route("/verify/:trxRef")
+  .post(authenticateUser, validateRole("client"), verifyAppointment);
 module.exports = router;

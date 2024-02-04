@@ -70,12 +70,13 @@ module.exports.createAppointment = catchAsyncErrors(async (req, res, next) => {
     where: { id: req.user.id },
     attributes: ["email"],
   });
+  const trxAmount = therapist.ratePerHour * hoursCount
   return res.status(201).json({
     success: true,
     message: "Appointment created. Proceed with payment",
     data: {
       clientEmail: client.email,
-      amount: therapist.ratePerHour,
+      amount: trxAmount,
       publicKey: paystackConfig.pubKey,
       transactionRef: trxRef,
     },

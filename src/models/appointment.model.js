@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     therapistId: {
       type: DataTypes.UUID,
       references: {
-        model: "therapists",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     clientId: {
       type: DataTypes.UUID,
       references: {
-        model: "clients",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -26,13 +26,17 @@ module.exports = (sequelize, DataTypes) => {
     },
     transactionId: DataTypes.UUID,
     timestamp: DataTypes.DATE, // appointment date
-    status: DataTypes.ENUM(
-      "pending",
-      "fixed",
-      "active",
-      "inactive",
-      "declined",
-    ),
+    status: {
+      type: DataTypes.ENUM(
+        "pending",
+        "fixed",
+        "active",
+        "inactive",
+        "declined",
+      ),
+      allowNull: false,
+      defaultValue: "pending",
+    },
     outcome: DataTypes.TEXT,
     notes: DataTypes.TEXT,
     appointmentFormat: DataTypes.ENUM("chat"),

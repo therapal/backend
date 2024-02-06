@@ -17,17 +17,27 @@ module.exports = (sequelize, DataTypes) => {
     },
     sender: {
       type: DataTypes.UUID,
-      allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     receiver: {
       type: DataTypes.UUID,
-      allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     mediaType: {
       type: DataTypes.ENUM("image", "none"),
       defaultValue: "none",
     },
-    mediaSource: {
+    mediaPath: {
       type: DataTypes.STRING,
       allowNull: true,
     },

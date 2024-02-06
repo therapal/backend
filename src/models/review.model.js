@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     therapistId: {
       type: DataTypes.UUID,
       references: {
-        model: "therapists",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     clientId: {
       type: DataTypes.UUID,
       references: {
-        model: "clients",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",

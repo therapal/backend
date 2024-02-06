@@ -1,8 +1,8 @@
 const {
-  appointment: Appointment,
-  transaction: Transaction,
-  client: Client,
-  therapist: Therapist,
+  appointments: Appointment,
+  transactions: Transaction,
+  clients: Client,
+  therapists: Therapist,
 } = require("../models");
 const { catchAsyncErrors } = require("../routes/middlewares/errors");
 const { ApiError } = require("../utils/errors");
@@ -70,7 +70,7 @@ module.exports.createAppointment = catchAsyncErrors(async (req, res, next) => {
     where: { id: req.user.id },
     attributes: ["email"],
   });
-  const trxAmount = therapist.ratePerHour * hoursCount
+  const trxAmount = therapist.ratePerHour * hoursCount;
   return res.status(201).json({
     success: true,
     message: "Appointment created. Proceed with payment",

@@ -1,9 +1,21 @@
 const express = require("express");
-const { catchAsyncErrors } = require("../middlewares/errors");
 const router = express.Router();
-const { register, login } = require("../../controller/auth.controller");
+const {
+  register,
+  login,
+  sendEmailVerification,
+  verifyEmail,
+  sendResetPasswordLink,
+  resetPassword,
+  updatePassword,
+} = require("../../controller/auth.controller");
+const { authenticateUser } = require("../middlewares/auth");
 
-router.post("/register", catchAsyncErrors(register));
-router.post("/login", catchAsyncErrors(login));
+router.post("/register", register);
+router.post("/login", login);
+router.route("/email/verify").put(verifyEmail).get(sendEmailVerification);
+
+router.route("/password/reset").get(sendResetPasswordLink).put(resetPassword);
+router.route("/password/update").put(authenticateUser, updatePassword);
 
 module.exports = router;

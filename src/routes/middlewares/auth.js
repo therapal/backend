@@ -9,7 +9,7 @@ module.exports.authenticateUser = async (req, res, next) => {
       if (err) {
         return next(new ApiError("Invalid token", 400));
       } else {
-        if (!info.isVerified) {
+        if (!info.isEmailVerified) {
           return next(new ApiError("Account is not yet verified", 401));
         }
         req.user = {

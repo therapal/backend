@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.UUID,
       unique: true,
       references: {
-        model: "clients",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",

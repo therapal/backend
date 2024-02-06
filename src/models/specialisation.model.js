@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
     therapistId: {
       type: DataTypes.UUID,
       references: {
-        model: "therapists",
+        model: "users",
         key: "id",
       },
       onUpdate: "CASCADE",

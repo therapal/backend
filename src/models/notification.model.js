@@ -6,16 +6,24 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    ownerRole: {
-      type: DataTypes.ENUM("therapist", "client", "admin"),
-      allowNull: false,
-    },
-    ownerId: {
+    userId: {
       type: DataTypes.UUID,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
+    },
+    type: {
+      type: DataTypes.ENUM("appointment"),
       allowNull: false,
     },
-    type: DataTypes.ENUM("appointment"),
-    read: DataTypes.BOOLEAN,
+    read: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
     content: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE,

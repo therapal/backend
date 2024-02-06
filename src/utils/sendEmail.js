@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
-const nodemailer = require('nodemailer')
-const { mail } = require('../config')
+const nodemailer = require("nodemailer");
+const { mail } = require("../config");
 
 const sendEmail = async (options) => {
   const transporter = nodemailer.createTransport({
@@ -11,16 +11,16 @@ const sendEmail = async (options) => {
     requireTLS: true,
     auth: {
       user: mail.user,
-      pass: mail.pass
-    }
-  })
+      pass: mail.pass,
+    },
+  });
   const mailOptions = {
     from: mail.user,
     to: options.email,
     subject: options.subject,
-    html: options.html
-  }
-  await transporter.sendMail(mailOptions)
-}
+    html: options.html,
+  };
+  await transporter.sendMail(mailOptions);
+};
 
-module.exports = sendEmail
+module.exports = sendEmail;

@@ -1,10 +1,10 @@
 const express = require('express')
 const router = express.Router()
 const { searchTherapist } = require('../../controller/search.controller')
-const { authenticateUser, validateRole } = require('../middlewares/auth')
+const { authenticateUser } = require('../middlewares/auth')
 
 router
   .route('/')
-  .get(authenticateUser, validateRole('client'), searchTherapist)
+  .get( searchTherapist)
 
 module.exports = router

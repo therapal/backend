@@ -1,51 +1,51 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("messages", {
+  return sequelize.define('messages', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true,
+      primaryKey: true
     },
     appointmentId: {
       type: DataTypes.UUID,
       references: {
-        model: "appointments",
-        key: "id",
+        model: 'appointments',
+        key: 'id'
       },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     sender: {
       type: DataTypes.UUID,
       references: {
-        model: "users",
-        key: "id",
+        model: 'users',
+        key: 'id'
       },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     receiver: {
       type: DataTypes.UUID,
       references: {
-        model: "users",
-        key: "id",
+        model: 'users',
+        key: 'id'
       },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     mediaType: {
-      type: DataTypes.ENUM("image", "none"),
-      defaultValue: "none",
+      type: DataTypes.ENUM('image', 'none'),
+      defaultValue: 'none'
     },
     mediaPath: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: true
     },
     text: {
       type: DataTypes.TEXT,
-      allowNull: false,
+      allowNull: false
     },
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
-  });
-};
+    updatedAt: DataTypes.DATE
+  })
+}

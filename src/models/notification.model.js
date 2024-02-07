@@ -1,31 +1,31 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("notifications", {
+  return sequelize.define('notifications', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true,
+      primaryKey: true
     },
     userId: {
       type: DataTypes.UUID,
       references: {
-        model: "users",
-        key: "id",
+        model: 'users',
+        key: 'id'
       },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE'
     },
     type: {
-      type: DataTypes.ENUM("appointment"),
-      allowNull: false,
+      type: DataTypes.ENUM('appointment'),
+      allowNull: false
     },
     read: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: false,
+      defaultValue: false
     },
     content: DataTypes.TEXT,
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE,
-  });
-};
+    updatedAt: DataTypes.DATE
+  })
+}

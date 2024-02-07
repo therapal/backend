@@ -1,43 +1,43 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "users",
+    'users',
     {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
-        primaryKey: true,
+        primaryKey: true
       },
       fullName: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
-        unique: true,
+        unique: true
       },
       isEmailVerified: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false,
+        defaultValue: false
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       role: {
-        type: DataTypes.ENUM("admin", "therapist", "client"),
-        allowNull: false,
+        type: DataTypes.ENUM('admin', 'therapist', 'client'),
+        allowNull: false
       },
       imgPath: DataTypes.STRING,
       createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      updatedAt: DataTypes.DATE
     },
     {
       defaultScope: {
-        attributes: { exclude: ["password"] }, // Exclude password by default
+        attributes: { exclude: ['password'] } // Exclude password by default
       },
       scopes: {
         withPassword: {
-          attributes: {}, // Include password when using the 'withPassword' scope
-        },
-      },
-    },
-  );
-};
+          attributes: {} // Include password when using the 'withPassword' scope
+        }
+      }
+    }
+  )
+}

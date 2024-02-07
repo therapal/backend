@@ -7,7 +7,7 @@ module.exports.authenticateUser = async (req, res, next) => {
   jwt.verify(token, jwtSecret, (err, info) => {
     try {
       if (err) {
-        return next(new ApiError('Invalid token', 400))
+        return next(new ApiError('Please login to access this resource', 400))
       } else {
         if (!info.isEmailVerified) {
           return next(new ApiError('Account is not yet verified', 401))
@@ -19,16 +19,14 @@ module.exports.authenticateUser = async (req, res, next) => {
         next()
       }
     } catch (err) {
-      console.error(err)
       return next(new ApiError('Invalid token', 400))
     }
   })
 }
-module.exports.validateRole = (...roles) => {
-  console.log(roles)
-  return (req, res, next) => {
+module.exports.validateRole = (roles) => {
+  return function (req, res, next) {
     const userRole = req.user.role
-    if (!roles.include(userRole)) {
+    if (!roles.includes(userRole)) {
       return next(new ApiError("You can't access this route", 401))
     }
     next()

@@ -211,7 +211,7 @@ module.exports.login = catchAsyncErrors(async function (req, res, next) {
   const { email, password } = req.body
   const user = await User.findOne({
     where: { email },
-    attributes: ['password', 'isEmailVerified', 'id']
+    attributes: ['password', 'isEmailVerified', 'id', 'role']
   })
   if (!user) {
     return next(new ApiError('Incorrect credentials', 400))

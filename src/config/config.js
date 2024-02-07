@@ -1,13 +1,13 @@
-const { database } = require(".");
+const { database } = require('.')
 
 module.exports = {
   development: {
-    ...database,
+    ...database
   },
   test: {
-    ...database,
+    ...database
   },
   production: {
-    ...database,
-  },
-};
+    ...database
+  }
+}

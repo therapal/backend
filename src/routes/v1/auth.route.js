@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 const {
   register,
   login,
@@ -7,15 +7,15 @@ const {
   verifyEmail,
   sendResetPasswordLink,
   resetPassword,
-  updatePassword,
-} = require("../../controller/auth.controller");
-const { authenticateUser } = require("../middlewares/auth");
+  updatePassword
+} = require('../../controller/auth.controller')
+const { authenticateUser } = require('../middlewares/auth')
 
-router.post("/register", register);
-router.post("/login", login);
-router.route("/email/verify").put(verifyEmail).get(sendEmailVerification);
+router.post('/register', register)
+router.post('/login', login)
+router.route('/email/verify').put(verifyEmail).get(sendEmailVerification)
 
-router.route("/password/reset").get(sendResetPasswordLink).put(resetPassword);
-router.route("/password/update").put(authenticateUser, updatePassword);
+router.route('/password/reset').get(sendResetPasswordLink).put(resetPassword)
+router.route('/password/update').put(authenticateUser, updatePassword)
 
-module.exports = router;
+module.exports = router

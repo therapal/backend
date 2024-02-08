@@ -7,6 +7,7 @@ const profileRoute = require('./profile.route')
 const searchRoute = require('./search.route')
 const specialisationRoute = require('./specialisation.route')
 const preferenceRoute = require('./preference.route')
+const categoryRoute = require('./category.route')
 const reviewRoute = require('./review.route')
 const { authenticateUser, validateRole } = require('../middlewares/auth')
 
@@ -18,5 +19,6 @@ router.use('/search', authenticateUser, validateRole('client'), searchRoute)
 router.use('/specialisation', authenticateUser, validateRole('therapist'), specialisationRoute)
 router.use('/preference', authenticateUser, validateRole(['client']), preferenceRoute)
 router.use('/review', authenticateUser, validateRole('client'), reviewRoute)
+router.use('/category', authenticateUser, categoryRoute)
 
 module.exports = router

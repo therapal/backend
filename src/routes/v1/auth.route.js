@@ -7,12 +7,14 @@ const {
   verifyEmail,
   sendResetPasswordLink,
   resetPassword,
-  updatePassword
+  updatePassword,
+  logout
 } = require('../../controller/auth.controller')
 const { authenticateUser } = require('../middlewares/auth')
 
 router.post('/register', register)
 router.post('/login', login)
+router.post('/logout', logout)
 router.route('/email/verify').put(verifyEmail).get(sendEmailVerification)
 
 router.route('/password/reset').get(sendResetPasswordLink).put(resetPassword)

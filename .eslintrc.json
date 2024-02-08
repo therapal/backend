@@ -8,7 +8,5 @@
   "parserOptions": {
     "ecmaVersion": "latest"
   },
-  "rules": {
-    "quotes": [2, "single", {}]
-  }
+  "rules": {}
 }

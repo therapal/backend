@@ -1,20 +1,20 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('categories', {
+  return sequelize.define("categories", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     description: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  })
-}
+    updatedAt: DataTypes.DATE,
+  });
+};

@@ -1,10 +1,10 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
 const {
-  addSpecialisation
-} = require('../../controller/specialisation.controller')
+  addSpecialisation,
+} = require("../../controller/specialisation.controller");
 
-router.route('/').put(addSpecialisation)
+router.route("/").put(addSpecialisation);
 
-module.exports = router
+module.exports = router;

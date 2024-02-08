@@ -1,34 +1,34 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('preferredLanguages', {
+  return sequelize.define("preferredLanguages", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     languageId: {
       type: DataTypes.UUID,
       references: {
-        model: 'languages',
-        key: 'id'
+        model: "languages",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     userId: {
       type: DataTypes.UUID,
       references: {
-        model: 'users',
-        key: 'id'
+        model: "users",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     profficiencyLevel: {
-      type: DataTypes.ENUM('beginner', 'intermediate', 'advanced', 'fluent'),
-      allowNull: false
+      type: DataTypes.ENUM("beginner", "intermediate", "advanced", "fluent"),
+      allowNull: false,
     },
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  })
-}
+    updatedAt: DataTypes.DATE,
+  });
+};

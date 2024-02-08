@@ -10,8 +10,9 @@ const { sessionSecret, cookieSecret, treblleConfig } = require("./config");
 const { connectRedis, connectPostgres } = require("./utils/database");
 const { useTreblle } = require("treblle");
 const redisClient = connectRedis();
+const helmet = require("helmet");
 connectPostgres();
-
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

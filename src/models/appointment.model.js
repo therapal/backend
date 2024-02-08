@@ -1,49 +1,49 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('appointments', {
+  return sequelize.define("appointments", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     therapistId: {
       type: DataTypes.UUID,
       references: {
-        model: 'users',
-        key: 'id'
+        model: "users",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     clientId: {
       type: DataTypes.UUID,
       references: {
-        model: 'users',
-        key: 'id'
+        model: "users",
+        key: "id",
       },
-      onUpdate: 'CASCADE',
-      onDelete: 'CASCADE'
+      onUpdate: "CASCADE",
+      onDelete: "CASCADE",
     },
     transactionId: DataTypes.UUID,
     timestamp: DataTypes.DATE, // appointment date
     status: {
       type: DataTypes.ENUM(
-        'pending',
-        'fixed',
-        'active',
-        'inactive',
-        'declined'
+        "pending",
+        "fixed",
+        "active",
+        "inactive",
+        "declined",
       ),
       allowNull: false,
-      defaultValue: 'pending'
+      defaultValue: "pending",
     },
     outcome: DataTypes.TEXT,
     notes: DataTypes.TEXT,
-    appointmentFormat: DataTypes.ENUM('chat'),
+    appointmentFormat: DataTypes.ENUM("chat"),
     appointmentFormatId: DataTypes.UUID,
     followUpRecommendation: DataTypes.TEXT,
     durationMinutes: DataTypes.INTEGER,
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  })
-}
+    updatedAt: DataTypes.DATE,
+  });
+};

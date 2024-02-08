@@ -1,8 +1,8 @@
-const express = require('express')
-const router = express.Router()
+const express = require("express");
+const router = express.Router();
 
-const { createTherapistReview } = require('../../controller/review.controller')
+const { createTherapistReview } = require("../../controller/review.controller");
 
-router.route('/').post(createTherapistReview)
+router.route("/").post(createTherapistReview);
 
-module.exports = router
+module.exports = router;

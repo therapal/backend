@@ -1,328 +1,328 @@
-const { ApiError } = require('../utils/errors')
-const { users: User, tokens: Token } = require('../models')
-const { jwtSecret, NODE_ENV, clientDomain } = require('../config')
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const { catchAsyncErrors } = require('../routes/middlewares/errors')
-const sendEmail = require('../utils/sendEmail')
-const crypto = require('crypto')
-const shado = require('shado')
-const { passwordStrength } = require('check-password-strength')
+const { ApiError } = require("../utils/errors");
+const { users: User, tokens: Token } = require("../models");
+const { jwtSecret, NODE_ENV, clientDomain } = require("../config");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { catchAsyncErrors } = require("../routes/middlewares/errors");
+const sendEmail = require("../utils/sendEmail");
+const crypto = require("crypto");
+const shado = require("shado");
+const { passwordStrength } = require("check-password-strength");
 
 module.exports.register = catchAsyncErrors(async function (req, res, next) {
-  const { email, fullName, password, role } = req.body
+  const { email, fullName, password, role } = req.body;
   if (!email || !fullName || !password) {
-    return next(new ApiError('Invalid request body', 400))
+    return next(new ApiError("Invalid request body", 400));
   }
-  if (!['therapist', 'client', 'admin'].includes(role)) {
-    return next(new ApiError('Invalid role', 400))
+  if (!["therapist", "client", "admin"].includes(role)) {
+    return next(new ApiError("Invalid role", 400));
   }
   if (await User.findOne({ where: { email } })) {
-    return next(new ApiError('Email already exists', 409))
+    return next(new ApiError("Email already exists", 409));
   }
-  if (passwordStrength(password).value !== 'Strong') {
+  if (passwordStrength(password).value !== "Strong") {
     return next(
       new ApiError(
-        'Password should contain at least one Uppercase letter, alpha numeric character, a digit and should be at least 8 characters long',
-        400
-      )
-    )
+        "Password should contain at least one Uppercase letter, alpha numeric character, a digit and should be at least 8 characters long",
+        400,
+      ),
+    );
   }
-  const hashedPassword = await generatePasswordHash(password)
+  const hashedPassword = await generatePasswordHash(password);
   const user = await User.create({
     email,
     fullName,
     role,
-    password: hashedPassword
-  })
+    password: hashedPassword,
+  });
 
   await sendEmailVerificationLink({
     id: user.id,
     fullName: user.fullName,
-    email: user.email
-  })
+    email: user.email,
+  });
   return res.status(201).json({
     success: true,
-    message: 'User registered',
+    message: "User registered",
     data: {
       user: {
         id: user.id,
         fullName: user.fullName,
         email: user.email,
-        role: user.role
-      }
-    }
-  })
-})
+        role: user.role,
+      },
+    },
+  });
+});
 
 module.exports.verifyEmail = catchAsyncErrors(async (req, res, next) => {
-  const { uId } = req.body
-  const mailToken = await Token.findOne({ where: { token: uId } })
+  const { uId } = req.body;
+  const mailToken = await Token.findOne({ where: { token: uId } });
   if (!mailToken) {
-    return next(new ApiError('Invalid verification link', 400))
+    return next(new ApiError("Invalid verification link", 400));
   }
   const minsDuration = shado.date
     .set(new Date(mailToken.createdAt), new Date())
-    .getMinutes()
+    .getMinutes();
   if (minsDuration > 1440 /* 1 day */) {
-    return next(new ApiError('Invalid verification link', 400))
+    return next(new ApiError("Invalid verification link", 400));
   }
   await User.update(
     { isEmailVerified: true },
-    { where: { id: mailToken.userId } }
-  )
-  await mailToken.destroy()
+    { where: { id: mailToken.userId } },
+  );
+  await mailToken.destroy();
 
   return res.status(200).json({
     success: true,
-    message: 'Email is now verified'
-  })
-})
+    message: "Email is now verified",
+  });
+});
 
 module.exports.sendEmailVerification = catchAsyncErrors(
   async function (req, res, next) {
-    const { email } = req.query
+    const { email } = req.query;
     const user = await User.findOne({
       where: { email },
-      attributes: ['email', 'fullName', 'id', 'isEmailVerified']
-    })
+      attributes: ["email", "fullName", "id", "isEmailVerified"],
+    });
     if (!user) {
-      return next(new ApiError('Invalid email passed', 400))
+      return next(new ApiError("Invalid email passed", 400));
     }
     if (user.isEmailVerified) {
-      return next(new ApiError('Email is already verified', 401))
+      return next(new ApiError("Email is already verified", 401));
     }
     const token = await Token.findOne(
       {
         where: {
           userId: user.id,
-          type: 'verify_email'
-        }
+          type: "verify_email",
+        },
       },
       {
-        order: [['createdAt', 'desc']],
-        limit: 1
-      }
-    )
+        order: [["createdAt", "desc"]],
+        limit: 1,
+      },
+    );
     if (token) {
       const minsDuration = shado.date
         .set(new Date(token.createdAt), new Date())
-        .getMinutes()
+        .getMinutes();
 
       if (minsDuration < 10) {
         return next(
           new ApiError(
             `You can't request an email verification link at this time. Wait for the next ${10 - minsDuration} minutes`,
-            401
-          )
-        )
+            401,
+          ),
+        );
       }
     }
 
     await sendEmailVerificationLink({
       fullName: user.fullName,
       email: user.email,
-      id: user.id
-    })
+      id: user.id,
+    });
     return res.status(200).json({
       success: true,
-      message: 'Email verification link sent'
-    })
-  }
-)
+      message: "Email verification link sent",
+    });
+  },
+);
 module.exports.sendResetPasswordLink = catchAsyncErrors(
   async function (req, res, next) {
-    const { email } = req.query
-    const user = await User.findOne({ where: { email } })
+    const { email } = req.query;
+    const user = await User.findOne({ where: { email } });
 
     if (!user) {
-      return next(new ApiError('Could not send link', 400))
+      return next(new ApiError("Could not send link", 400));
     }
     const token = await Token.findOne(
       {
         where: {
           userId: user.id,
-          type: 'reset_password'
-        }
+          type: "reset_password",
+        },
       },
       {
-        order: [['createdAt', 'desc']],
-        limit: 1
-      }
-    )
+        order: [["createdAt", "desc"]],
+        limit: 1,
+      },
+    );
     if (token) {
       const minsDuration = shado.date
         .set(new Date(token.createdAt), new Date())
-        .getMinutes()
+        .getMinutes();
 
       if (minsDuration < 10) {
         return next(
           new ApiError(
             `You can't request a password reset link at this time. Wait for the next ${10 - minsDuration} minutes`,
-            401
-          )
-        )
+            401,
+          ),
+        );
       }
     }
     await sendResetPasswordLinkToEmail({
       id: user.id,
       email: user.email,
-      fullName: user.fullName
-    })
+      fullName: user.fullName,
+    });
     return res.status(200).json({
       success: true,
-      message: 'Password reset link sent'
-    })
-  }
-)
+      message: "Password reset link sent",
+    });
+  },
+);
 module.exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
-  const { id } = req.user
+  const { id } = req.user;
   const user = await User.findOne({
     where: { id },
-    attributes: ['password']
-  })
-  const { oldPassword } = req.body
-  const compareOld = bcrypt.compareSync(oldPassword, user.password)
+    attributes: ["password"],
+  });
+  const { oldPassword } = req.body;
+  const compareOld = bcrypt.compareSync(oldPassword, user.password);
   if (!compareOld) {
-    return next(new ApiError('Old password is invalid', 401))
+    return next(new ApiError("Old password is invalid", 401));
   }
-  req.resetPassword = { existingPassword: user.password }
-  return initializeUpdate(req, res, next)
-})
+  req.resetPassword = { existingPassword: user.password };
+  return initializeUpdate(req, res, next);
+});
 module.exports.resetPassword = catchAsyncErrors(
   async function (req, res, next) {
-    const { uId } = req.body
+    const { uId } = req.body;
     const mailToken = await Token.findOne({
-      where: { token: uId, type: 'reset_password' }
-    })
+      where: { token: uId, type: "reset_password" },
+    });
     if (!mailToken) {
-      return next(new ApiError('Invalid link', 400))
+      return next(new ApiError("Invalid link", 400));
     }
     const user = await User.findOne({
       where: { id: mailToken.userId },
-      attributes: ['password', 'id']
-    })
-    req.user = { id: user.id }
-    req.resetPassword = { existingPassword: user.password }
-    return initializeUpdate(req, res, next)
-  }
-)
+      attributes: ["password", "id"],
+    });
+    req.user = { id: user.id };
+    req.resetPassword = { existingPassword: user.password };
+    return initializeUpdate(req, res, next);
+  },
+);
 module.exports.logout = catchAsyncErrors(async function (req, res, next) {
-  res.clearCookie('token')
-  res.sendStatus(200)
-})
+  res.clearCookie("token");
+  res.sendStatus(200);
+});
 module.exports.login = catchAsyncErrors(async function (req, res, next) {
-  const { email, password } = req.body
+  const { email, password } = req.body;
   const user = await User.findOne({
     where: { email },
     attributes: [
-      'password',
-      'isEmailVerified',
-      'id',
-      'role',
-      'fullName',
-      'email'
-    ]
-  })
+      "password",
+      "isEmailVerified",
+      "id",
+      "role",
+      "fullName",
+      "email",
+    ],
+  });
   if (!user) {
-    return next(new ApiError('Incorrect credentials', 401))
+    return next(new ApiError("Incorrect credentials", 401));
   }
-  const compare = bcrypt.compareSync(password, user.password)
+  const compare = bcrypt.compareSync(password, user.password);
   if (!compare) {
-    return next(new ApiError('Incorrect credentials', 401))
+    return next(new ApiError("Incorrect credentials", 401));
   }
   if (!user.isEmailVerified) {
-    return next(new ApiError('Account is not yet verified', 401))
+    return next(new ApiError("Account is not yet verified", 401));
   }
   const token = await createJwtToken({
     id: user.id,
     role: user.role,
-    isEmailVerified: user.isEmailVerified
-  })
-  res.cookie('token', token, {
+    isEmailVerified: user.isEmailVerified,
+  });
+  res.cookie("token", token, {
     signed: true,
-    path: '/',
+    path: "/",
     expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    secure: NODE_ENV !== 'development'
-  })
+    secure: NODE_ENV !== "development",
+  });
   return res.status(200).json({
     success: true,
-    message: 'You are now logged in',
+    message: "You are now logged in",
     data: {
       user: {
         id: user.id,
         fullName: user.fullName,
         role: user.role,
-        email: user.email
-      }
-    }
-  })
-})
+        email: user.email,
+      },
+    },
+  });
+});
 
-async function createJwtToken (user) {
-  const maxAge = '30 mins'
+async function createJwtToken(user) {
+  const maxAge = "30 mins";
   return await jwt.sign(
     {
       id: user.id,
       role: user.role,
-      isEmailVerified: user.isEmailVerified
+      isEmailVerified: user.isEmailVerified,
     },
     jwtSecret,
-    { expiresIn: maxAge }
-  )
+    { expiresIn: maxAge },
+  );
 }
 
-async function generatePasswordHash (password) {
-  const saltRound = 10
-  return await bcrypt.hash(password, saltRound)
+async function generatePasswordHash(password) {
+  const saltRound = 10;
+  return await bcrypt.hash(password, saltRound);
 }
 
-async function initializeUpdate (req, res, next) {
-  const { newPassword, confirmPassword } = req.body
-  const { id } = req.user
-  const existingPassword = req.resetPassword.existingPassword
+async function initializeUpdate(req, res, next) {
+  const { newPassword, confirmPassword } = req.body;
+  const { id } = req.user;
+  const existingPassword = req.resetPassword.existingPassword;
   if (newPassword !== confirmPassword) {
     return next(
-      new ApiError('New password does not match confirmation password', 400)
-    )
+      new ApiError("New password does not match confirmation password", 400),
+    );
   }
-  const isExistingPassword = bcrypt.compareSync(newPassword, existingPassword)
+  const isExistingPassword = bcrypt.compareSync(newPassword, existingPassword);
   if (isExistingPassword) {
     return next(
       new ApiError(
-        'Your attempt to change the password to the same one as before has been unsuccessful. Please choose a new and unique password for your account',
-        400
-      )
-    )
+        "Your attempt to change the password to the same one as before has been unsuccessful. Please choose a new and unique password for your account",
+        400,
+      ),
+    );
   }
-  if (passwordStrength(newPassword).value !== 'Strong') {
+  if (passwordStrength(newPassword).value !== "Strong") {
     return next(
       new ApiError(
-        'Password should contain at least one Uppercase letter, alpha numeric character, a digit and should be at least 8 characters long',
-        400
-      )
-    )
+        "Password should contain at least one Uppercase letter, alpha numeric character, a digit and should be at least 8 characters long",
+        400,
+      ),
+    );
   }
 
-  const hashedPassword = await generatePasswordHash(newPassword)
-  await User.update({ password: hashedPassword }, { where: { id } })
+  const hashedPassword = await generatePasswordHash(newPassword);
+  await User.update({ password: hashedPassword }, { where: { id } });
 
   return res.status(200).json({
     success: true,
-    message: 'Password reset successful'
-  })
+    message: "Password reset successful",
+  });
 }
 
-async function sendEmailVerificationLink ({ id, fullName, email }) {
+async function sendEmailVerificationLink({ id, fullName, email }) {
   const mailToken = await Token.create({
     token: crypto.randomUUID(),
     userId: id,
-    type: 'verify_email'
-  })
+    type: "verify_email",
+  });
   await sendEmail({
     email,
-    subject: 'Email verification',
+    subject: "Email verification",
     html: `
       <!DOCTYPE html>
         <html lang="en">
@@ -386,18 +386,18 @@ async function sendEmailVerificationLink ({ id, fullName, email }) {
           </div>
         </body>
       </html>
-    `
-  })
+    `,
+  });
 }
-async function sendResetPasswordLinkToEmail ({ id, fullName, email }) {
+async function sendResetPasswordLinkToEmail({ id, fullName, email }) {
   const mailToken = await Token.create({
     token: crypto.randomUUID(),
     userId: id,
-    type: 'reset_password'
-  })
+    type: "reset_password",
+  });
   await sendEmail({
     email,
-    subject: 'Reset password',
+    subject: "Reset password",
     html: `
       <!DOCTYPE html>
       <html lang="en">
@@ -448,6 +448,6 @@ async function sendResetPasswordLinkToEmail ({ id, fullName, email }) {
         </body>
       </html>
     
-    `
-  })
+    `,
+  });
 }

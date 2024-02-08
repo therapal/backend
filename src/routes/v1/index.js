@@ -1,44 +1,44 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const authRoute = require('./auth.route')
-const adminRoute = require('./admin.route')
-const appointmentRoute = require('./appointment.route')
-const profileRoute = require('./profile.route')
-const searchRoute = require('./search.route')
-const specialisationRoute = require('./specialisation.route')
-const preferenceRoute = require('./preference.route')
-const categoryRoute = require('./category.route')
-const reviewRoute = require('./review.route')
-const { authenticateUser, validateRole } = require('../middlewares/auth')
+const authRoute = require("./auth.route");
+const adminRoute = require("./admin.route");
+const appointmentRoute = require("./appointment.route");
+const profileRoute = require("./profile.route");
+const searchRoute = require("./search.route");
+const specialisationRoute = require("./specialisation.route");
+const preferenceRoute = require("./preference.route");
+const categoryRoute = require("./category.route");
+const reviewRoute = require("./review.route");
+const { authenticateUser, validateRole } = require("../middlewares/auth");
 
-router.use('/auth', authRoute)
-router.use('/admin', adminRoute)
+router.use("/auth", authRoute);
+router.use("/admin", adminRoute);
 router.use(
-  '/appointment',
+  "/appointment",
   authenticateUser,
-  validateRole('client'),
-  appointmentRoute
-)
+  validateRole("client"),
+  appointmentRoute,
+);
 router.use(
-  '/profile',
+  "/profile",
   authenticateUser,
-  validateRole('therapist'),
-  profileRoute
-)
-router.use('/search', authenticateUser, validateRole('client'), searchRoute)
+  validateRole("therapist"),
+  profileRoute,
+);
+router.use("/search", authenticateUser, validateRole("client"), searchRoute);
 router.use(
-  '/specialisation',
+  "/specialisation",
   authenticateUser,
-  validateRole('therapist'),
-  specialisationRoute
-)
+  validateRole("therapist"),
+  specialisationRoute,
+);
 router.use(
-  '/preference',
+  "/preference",
   authenticateUser,
-  validateRole(['client']),
-  preferenceRoute
-)
-router.use('/review', authenticateUser, validateRole('client'), reviewRoute)
-router.use('/category', authenticateUser, categoryRoute)
+  validateRole(["client"]),
+  preferenceRoute,
+);
+router.use("/review", authenticateUser, validateRole("client"), reviewRoute);
+router.use("/category", authenticateUser, categoryRoute);
 
-module.exports = router
+module.exports = router;

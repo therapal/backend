@@ -1,25 +1,25 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define('languages', {
+  return sequelize.define("languages", {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
     },
     languageName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     isoCode: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     nativeName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     alternateName: DataTypes.STRING,
     createdAt: DataTypes.DATE,
-    updatedAt: DataTypes.DATE
-  })
-}
+    updatedAt: DataTypes.DATE,
+  });
+};

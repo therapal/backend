@@ -1,7 +1,7 @@
-const express = require('express')
-const router = express.Router()
-const { updatePreference } = require('../../controller/preference.controller')
+const express = require("express");
+const router = express.Router();
+const { updatePreference } = require("../../controller/preference.controller");
 
-router.route('/').put(updatePreference)
+router.route("/").put(updatePreference);
 
-module.exports = router
+module.exports = router;

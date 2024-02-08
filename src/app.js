@@ -12,10 +12,12 @@ const treblle = require('@treblle/express')
 const redisClient = connectRedis()
 connectPostgres()
 
-app.use(treblle({
-  apiKey: treblleConfig.treblleApiKey,
-  projectId: treblleConfig.treblleProjectId,
-}))
+app.use(
+  treblle({
+    apiKey: treblleConfig.treblleApiKey,
+    projectId: treblleConfig.treblleProjectId
+  })
+)
 
 app.use(logger('dev'))
 app.use(express.json())

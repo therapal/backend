@@ -1,13 +1,11 @@
 const { Op } = require('sequelize')
-const {
-  specialisations: Specialisation
-} = require('../models')
+const { specialisations: Specialisation } = require('../models')
 
 const { ApiError } = require('../utils/errors')
 const { catchAsyncErrors } = require('../routes/middlewares/errors')
 
 module.exports.searchTherapist = catchAsyncErrors(async (req, res, next) => {
-  let { category, page = 1, pageSize = 10, name } = req.query
+  let { category, page = 1, pageSize = 10 } = req.query
 
   if (category.length === 0) {
     next(new ApiError('Select at least one category', 400))
@@ -36,7 +34,8 @@ module.exports.searchTherapist = catchAsyncErrors(async (req, res, next) => {
 
   const response = {
     status: true,
-    message: matched.count === 0 ? 'No matching therapist' : 'Therapists matched' ,
+    message:
+      matched.count === 0 ? 'No matching therapist' : 'Therapists matched',
     therapists: matched.rows,
     currentPage: page
   }

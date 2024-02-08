@@ -1,6 +1,4 @@
-const {
-  categories: Category
-} = require('../models')
+const { categories: Category } = require('../models')
 const { catchAsyncErrors } = require('../routes/middlewares/errors')
 
 const { ApiError } = require('../utils/errors')
@@ -11,7 +9,8 @@ module.exports.createCategory = catchAsyncErrors(async (req, res, next) => {
     return next(new ApiError('Please choose a title and description', 404))
   }
   const category = await Category.create({
-    title, description
+    title,
+    description
   })
 
   res.status(200).json({

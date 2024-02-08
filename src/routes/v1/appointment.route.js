@@ -4,12 +4,7 @@ const {
   createAppointment,
   verifyAppointment
 } = require('../../controller/appointment.controller.js')
-const { authenticateUser } = require('../middlewares/auth')
 
-router
-  .route('/')
-  .post(createAppointment)
-router
-  .route('/verify/:trxRef')
-  .post(verifyAppointment)
+router.route('/').post(createAppointment)
+router.route('/verify/:trxRef').post(verifyAppointment)
 module.exports = router

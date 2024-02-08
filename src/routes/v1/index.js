@@ -13,11 +13,31 @@ const { authenticateUser, validateRole } = require('../middlewares/auth')
 
 router.use('/auth', authRoute)
 router.use('/admin', adminRoute)
-router.use('/appointment', authenticateUser, validateRole('client'), appointmentRoute)
-router.use('/profile', authenticateUser, validateRole('therapist'), profileRoute)
+router.use(
+  '/appointment',
+  authenticateUser,
+  validateRole('client'),
+  appointmentRoute
+)
+router.use(
+  '/profile',
+  authenticateUser,
+  validateRole('therapist'),
+  profileRoute
+)
 router.use('/search', authenticateUser, validateRole('client'), searchRoute)
-router.use('/specialisation', authenticateUser, validateRole('therapist'), specialisationRoute)
-router.use('/preference', authenticateUser, validateRole(['client']), preferenceRoute)
+router.use(
+  '/specialisation',
+  authenticateUser,
+  validateRole('therapist'),
+  specialisationRoute
+)
+router.use(
+  '/preference',
+  authenticateUser,
+  validateRole(['client']),
+  preferenceRoute
+)
 router.use('/review', authenticateUser, validateRole('client'), reviewRoute)
 router.use('/category', authenticateUser, categoryRoute)
 

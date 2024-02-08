@@ -215,7 +215,14 @@ module.exports.login = catchAsyncErrors(async function (req, res, next) {
   const { email, password } = req.body
   const user = await User.findOne({
     where: { email },
-    attributes: ['password', 'isEmailVerified', 'id', 'role', 'fullName', 'email']
+    attributes: [
+      'password',
+      'isEmailVerified',
+      'id',
+      'role',
+      'fullName',
+      'email'
+    ]
   })
   if (!user) {
     return next(new ApiError('Incorrect credentials', 401))
@@ -223,7 +230,7 @@ module.exports.login = catchAsyncErrors(async function (req, res, next) {
   const compare = bcrypt.compareSync(password, user.password)
   if (!compare) {
     return next(new ApiError('Incorrect credentials', 401))
-  };
+  }
   if (!user.isEmailVerified) {
     return next(new ApiError('Account is not yet verified', 401))
   }

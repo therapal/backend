@@ -1,8 +1,8 @@
 const {
   appointments: Appointment,
   transactions: Transaction,
-  clients: Client,
-  therapists: Therapist
+  users: User,
+  profiles: Profile
 } = require('../models')
 const { catchAsyncErrors } = require('../routes/middlewares/errors')
 const { ApiError } = require('../utils/errors')
@@ -21,9 +21,9 @@ module.exports.createAppointment = catchAsyncErrors(async (req, res, next) => {
   if (!date || !time || !therapistId || !hoursCount) {
     return next(new ApiError('Invalid request body', 400))
   }
-  const therapist = await Therapist.findOne({
-    where: { id: therapistId },
-    attributes: ['email', 'ratePerHour']
+  const therapist = await Profile.findOne({
+    where: { userId: therapistId },
+    attributes: ['ratePerHour']
   })
   if (!therapist) {
     return next(new ApiError('Therapist ID does not exist', 400))
@@ -62,11 +62,14 @@ module.exports.createAppointment = catchAsyncErrors(async (req, res, next) => {
     appointmentFormat: 'chat'
   })
   const trxRef = crypto.randomUUID()
-  await Transaction.create({
+  const transaction = await Transaction.create({
     appointmentId: appointment.id,
     reference: trxRef
   })
-  const client = await Client.findOne({
+  appointment.transactionId = transaction.id
+  await appointment.save()
+
+  const client = await User.findOne({
     where: { id: req.user.id },
     attributes: ['email']
   })

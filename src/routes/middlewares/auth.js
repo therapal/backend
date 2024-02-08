@@ -6,8 +6,9 @@ module.exports.authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.token
   jwt.verify(token, jwtSecret, (err, info) => {
     try {
+      console.log(info)
       if (err) {
-        return next(new ApiError('Please login to access this resource', 400))
+        return next(new ApiError('Please login to access this resource', 401))
       } else {
         if (!info.isEmailVerified) {
           return next(new ApiError('Account is not yet verified', 401))
@@ -19,7 +20,7 @@ module.exports.authenticateUser = async (req, res, next) => {
         next()
       }
     } catch (err) {
-      return next(new ApiError('Invalid token', 400))
+      return next(new ApiError('Invalid token', 401))
     }
   })
 }

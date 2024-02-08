@@ -90,7 +90,7 @@ module.exports.sendEmailVerification = catchAsyncErrors(
       return next(new ApiError('Invalid email passed', 400))
     }
     if (user.isEmailVerified) {
-      return next(new ApiError('Email is already verified', 400))
+      return next(new ApiError('Email is already verified', 401))
     }
     const token = await Token.findOne(
       {
@@ -113,7 +113,7 @@ module.exports.sendEmailVerification = catchAsyncErrors(
         return next(
           new ApiError(
             `You can't request an email verification link at this time. Wait for the next ${10 - minsDuration} minutes`,
-            400
+            401
           )
         )
       }
@@ -159,7 +159,7 @@ module.exports.sendResetPasswordLink = catchAsyncErrors(
         return next(
           new ApiError(
             `You can't request a password reset link at this time. Wait for the next ${10 - minsDuration} minutes`,
-            400
+            401
           )
         )
       }
@@ -186,7 +186,7 @@ module.exports.updatePassword = catchAsyncErrors(async (req, res, next) => {
   if (!compareOld) {
     return next(new ApiError('Old password is invalid', 401))
   }
-  req.resetPassword.existingPassword = user.password
+  req.resetPassword = { existingPassword: user.password }
   return initializeUpdate(req, res, next)
 })
 module.exports.resetPassword = catchAsyncErrors(
@@ -200,25 +200,32 @@ module.exports.resetPassword = catchAsyncErrors(
     }
     const user = await User.findOne({
       where: { id: mailToken.userId },
-      attributes: ['password']
+      attributes: ['password', 'id']
     })
-
-    req.resetPassword.existingPassword = user.password
+    req.user = { id: user.id }
+    req.resetPassword = { existingPassword: user.password }
     return initializeUpdate(req, res, next)
   }
 )
+module.exports.logout = catchAsyncErrors(async function (req, res, next) {
+  res.clearCookie('token')
+  res.sendStatus(200)
+})
 module.exports.login = catchAsyncErrors(async function (req, res, next) {
   const { email, password } = req.body
   const user = await User.findOne({
     where: { email },
-    attributes: ['password', 'isEmailVerified', 'id', 'role']
+    attributes: ['password', 'isEmailVerified', 'id', 'role', 'fullName', 'email']
   })
   if (!user) {
-    return next(new ApiError('Incorrect credentials', 400))
+    return next(new ApiError('Incorrect credentials', 401))
   }
   const compare = bcrypt.compareSync(password, user.password)
   if (!compare) {
-    return next(new ApiError('Incorrect credentials', 400))
+    return next(new ApiError('Incorrect credentials', 401))
+  };
+  if (!user.isEmailVerified) {
+    return next(new ApiError('Account is not yet verified', 401))
   }
   const token = await createJwtToken({
     id: user.id,
@@ -236,7 +243,12 @@ module.exports.login = catchAsyncErrors(async function (req, res, next) {
     success: true,
     message: 'You are now logged in',
     data: {
-      user: { id: user.id }
+      user: {
+        id: user.id,
+        fullName: user.fullName,
+        role: user.role,
+        email: user.email
+      }
     }
   })
 })
@@ -289,7 +301,7 @@ async function initializeUpdate (req, res, next) {
   const hashedPassword = await generatePasswordHash(newPassword)
   await User.update({ password: hashedPassword }, { where: { id } })
 
-  return res.status(201).json({
+  return res.status(200).json({
     success: true,
     message: 'Password reset successful'
   })

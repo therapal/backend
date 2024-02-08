@@ -8,14 +8,15 @@ const session = require('express-session')
 const RedisStore = require('connect-redis').default
 const { sessionSecret, cookieSecret, treblleConfig } = require('./config')
 const { connectRedis, connectPostgres } = require('./utils/database')
-const { useTreblle } = require('treblle')
+const treblle = require('@treblle/express')
 const redisClient = connectRedis()
 connectPostgres()
 
-useTreblle(app, {
-  apiKey: treblleConfig.trebbleApiKey,
-  projectId: treblleConfig.trebbleProjectId
-})
+app.use(treblle({
+  apiKey: treblleConfig.treblleApiKey,
+  projectId: treblleConfig.treblleProjectId,
+}))
+
 app.use(logger('dev'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))

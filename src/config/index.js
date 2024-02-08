@@ -35,6 +35,6 @@ module.exports.mail = {
 }
 
 module.exports.treblleConfig = {
-  apiKey: process.env.trebbleApiKey,
-  projectId: process.env.trebbleProjectId
+  apiKey: process.env.treblleApiKey,
+  projectId: process.env.treblleProjectId
 }

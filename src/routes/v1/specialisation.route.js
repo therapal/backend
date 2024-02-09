@@ -3,13 +3,13 @@ const router = express.Router();
 
 const {
   addSpecialisation,
-  getUserSpecialisations,
+  getTherapistSpecialisations,
 } = require("../../controller/specialisation.controller");
 const { authenticateUser, validateRole } = require("../middlewares/auth");
 
 router
   .route("/")
   .put(authenticateUser, validateRole("therapist"), addSpecialisation)
-  .get(getUserSpecialisations);
+  .get(authenticateUser, validateRole("therapist", "client"), getTherapistSpecialisations);
 
 module.exports = router;

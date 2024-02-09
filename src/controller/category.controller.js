@@ -25,7 +25,7 @@ module.exports.getAllCategory = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-module.exports.getAllUsersInCategory = catchAsyncErrors(
+module.exports.getAllTherapistsInCategory = catchAsyncErrors(
   async (req, res, next) => {
     const matched = await Specialisation.findAndCountAll({
       where: {

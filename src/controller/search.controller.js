@@ -1,5 +1,4 @@
-const { Op } = require("sequelize");
-const { specialisations: Specialisation } = require("../models");
+const { specialisations: Specialisation, users: User } = require("../models");
 
 const { ApiError } = require("../utils/errors");
 const { catchAsyncErrors } = require("../routes/middlewares/errors");
@@ -17,26 +16,24 @@ module.exports.searchTherapist = catchAsyncErrors(async (req, res, next) => {
     // cache this query
     where: {
       categoryId: category,
-      ratePerHour: {
-        [Op.not]: null,
-      },
-      isEmailVerified: true,
-      availability: {
-        [Op.ne]: "[]",
-      },
     },
-    includes: {
-      model: "therapists",
+    include: {
+      model: User,
+      attributes: ["id", "fullName", "imgPath"],
     },
     limit: pageSize,
     offset,
+  });
+  matched.rows = matched.rows.map((i) => {
+    i = i.user;
+    return i;
   });
 
   const response = {
     status: true,
     message:
       matched.count === 0 ? "No matching therapist" : "Therapists matched",
-    therapists: matched.rows,
+    data: matched.rows,
     currentPage: page,
   };
   res.status(200).json(response);

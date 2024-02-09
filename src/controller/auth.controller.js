@@ -45,12 +45,10 @@ module.exports.register = catchAsyncErrors(async function (req, res, next) {
     success: true,
     message: "User registered",
     data: {
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        email: user.email,
-        role: user.role,
-      },
+      id: user.id,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
     },
   });
 });
@@ -250,12 +248,10 @@ module.exports.login = catchAsyncErrors(async function (req, res, next) {
     success: true,
     message: "You are now logged in",
     data: {
-      user: {
-        id: user.id,
-        fullName: user.fullName,
-        role: user.role,
-        email: user.email,
-      },
+      id: user.id,
+      fullName: user.fullName,
+      role: user.role,
+      email: user.email,
     },
   });
 });

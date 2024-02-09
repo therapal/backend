@@ -12,6 +12,12 @@ router
   .post(authenticateUser, validateRole("admin"), createCategory)
   .get(getAllCategory);
 
-router.route("/:id/therapist").get(authenticateUser, validateRole("therapist", 'client'), getAllTherapistsInCategory);
+router
+  .route("/:id/therapist")
+  .get(
+    authenticateUser,
+    validateRole("therapist", "client"),
+    getAllTherapistsInCategory,
+  );
 
 module.exports = router;

@@ -10,6 +10,10 @@ const { authenticateUser, validateRole } = require("../middlewares/auth");
 router
   .route("/")
   .put(authenticateUser, validateRole("therapist"), addSpecialisation)
-  .get(authenticateUser, validateRole("therapist", "client"), getTherapistSpecialisations);
+  .get(
+    authenticateUser,
+    validateRole("therapist", "client"),
+    getTherapistSpecialisations,
+  );
 
 module.exports = router;

@@ -7,17 +7,17 @@ const { catchAsyncErrors } = require("../routes/middlewares/errors");
 
 const { ApiError } = require("../utils/errors");
 
-module.exports.getUserSpecialisations = catchAsyncErrors(
+module.exports.getTherapistSpecialisations = catchAsyncErrors(
   async (req, res, next) => {
-    const { userId, page = 1, pageSize = 10 } = req.query;
+    const { therapistId, page = 1, pageSize = 10 } = req.query;
     const offset = (page - 1) * pageSize;
 
-    if (!(await User.findByPk(userId))) {
+    if (!(await User.findByPk(therapistId))) {
       return next(new ApiError("User does not exist", 404));
     }
 
     const matched = await Specialisation.findAndCountAll({
-      where: { userId },
+      where: { userId: therapistId },
       attributes: ["categoryId"],
       include: {
         model: Category,

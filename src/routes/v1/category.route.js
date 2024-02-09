@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   createCategory,
   getAllCategory,
-  getAllUsersInCategory,
+  getAllTherapistsInCategory,
 } = require("../../controller/category.controller");
 const { authenticateUser, validateRole } = require("../middlewares/auth");
 
@@ -12,6 +12,6 @@ router
   .post(authenticateUser, validateRole("admin"), createCategory)
   .get(getAllCategory);
 
-router.route("/:id/user").get(getAllUsersInCategory);
+router.route("/:id/therapist").get(authenticateUser, validateRole("therapist", 'client'), getAllTherapistsInCategory);
 
 module.exports = router;

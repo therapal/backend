@@ -26,12 +26,7 @@ router.use(
   profileRoute,
 );
 router.use("/search", authenticateUser, validateRole("client"), searchRoute);
-router.use(
-  "/specialisation",
-  authenticateUser,
-  validateRole("therapist"),
-  specialisationRoute,
-);
+router.use("/specialisation", specialisationRoute);
 router.use(
   "/preference",
   authenticateUser,
@@ -39,6 +34,6 @@ router.use(
   preferenceRoute,
 );
 router.use("/review", authenticateUser, validateRole("client"), reviewRoute);
-router.use("/category", authenticateUser, categoryRoute);
+router.use("/category", categoryRoute);
 
 module.exports = router;

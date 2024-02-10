@@ -38,6 +38,11 @@ module.exports = (sequelize, DataTypes) => {
           attributes: {}, // Include password when using the 'withPassword' scope
         },
       },
+      hooks: {
+        beforeValidate(model) {
+          model.fullName = model.fullName.toLowerCase();
+        },
+      },
     },
   );
 };

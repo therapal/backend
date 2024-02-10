@@ -6,7 +6,6 @@ module.exports.authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.token;
   jwt.verify(token, jwtSecret, (err, info) => {
     try {
-      console.log(info);
       if (err) {
         return next(new ApiError("Please login to access this resource", 401));
       } else {

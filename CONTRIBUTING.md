@@ -11,6 +11,9 @@ Thank you for considering contributing to our project!
 
 1. Fork the repository and clone your fork.
 2. Create a new branch from the `dev` branch for your changes.
+   `git checkout dev`
+   `git pull origin dev`
+   `git checkout -b your-branch-name`
 3. Make your changes and commit them to your branch.
 4. Push your branch to your fork on GitHub.
 5. Submit a pull request from your branch to the `dev` branch of the main repository.

@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 module.exports.database = {
-  database: process.env.db_name,
-  username: process.env.db_user,
-  password: process.env.db_password,
+  database: process.env.DB_NAME,
+  username: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   dialect: "postgres",
-  port: process.env.db_port,
-  host: process.env.db_host,
+  port: process.env.DB_PORT,
+  host: process.env.DB_HOST,
 };
 
 module.exports.redisConfig = {

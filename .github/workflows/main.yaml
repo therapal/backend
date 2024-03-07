@@ -25,4 +25,4 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_HOST: ${{ secrets.DB_HOST }}
           NODE_ENV: test
-        run: npx sequelize-cli db:migrate --env=$NODE_ENV
+        run: npx sequelize-cli db:migrate --env=$NODE_ENV --debug

@@ -4,15 +4,13 @@
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./src/bin/www",
-    "prepare": "husky install",
     "dev": "cross-env NODE_ENV=development nodemon ./src/bin/www",
     "prettier": "prettier --write .",
     "lint": "eslint src/**/*.js",
     "format": "eslint src/**/*.js --fix",
-    "fpr": "npm run format && npm run prettier"
+    "prepare": "husky"
   },
   "dependencies": {
-    "@treblle/express": "^0.0.7",
     "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "check-password-strength": "^2.0.7",
@@ -25,8 +23,6 @@
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
     "express-session": "^1.18.0",
-    "firebase": "^10.7.2",
-    "firebase-admin": "^12.0.0",
     "helmet": "^7.1.0",
     "http-errors": "~1.6.3",
     "isemail": "^3.2.0",
@@ -40,15 +36,12 @@
     "winston": "^3.11.0"
   },
   "devDependencies": {
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-n": "^16.6.2",
     "eslint-plugin-promise": "^6.1.1",
     "husky": "^9.0.10",
-    "prettier-eslint": "^16.3.0",
-    "prettier-eslint-cli": "^8.0.1",
-    "prettier-stylelint": "^0.4.2",
-    "sequelize-cli": "^6.6.2"
+    "prettier": "3.2.5"
   }
 }

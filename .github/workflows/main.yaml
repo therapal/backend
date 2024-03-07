@@ -2,7 +2,7 @@ name: "UAT Workflow"
 on:
   push:
     branches:
-        - dev
+      - dev
 
 jobs:
   lint_and_migrate:
@@ -18,5 +18,11 @@ jobs:
       - name: Lint
         run: npm run format && npm run prettier
       - name: Run migrations
-        run: npx sequelize-cli db:migrate --url ${{ secrets.UAT_DB_URI }}
-      
+        env:
+          DB_NAME: ${{ secrets.UAT_DB_NAME }}
+          DB_USER: ${{ secrets.UAT_DB_USER }}
+          DB_PASSWORD: ${{ secrets.UAT_DB_PASSWORD }}
+          DB_PORT: ${{ secrets.UAT_DB_PORT }}
+          DB_HOST: ${{ secrets.UAT_DB_HOST }}
+          NODE_ENV: test
+        run: npx sequelize-cli db:migrate --env=$NODE_ENV

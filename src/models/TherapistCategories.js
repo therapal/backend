@@ -1,30 +1,22 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("specialisations", {
-    id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      allowNull: false,
-      primaryKey: true,
-    },
-    userId: {
+  return sequelize.define("TherapistCategories", {
+    therapist_id: {
       type: DataTypes.UUID,
       references: {
-        model: "users",
+        model: "Therapists",
         key: "id",
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    categoryId: {
+    category_id: {
       type: DataTypes.UUID,
       references: {
-        model: "categories",
+        model: "Categories",
         key: "id",
       },
       onUpdate: "CASCADE",
       onDelete: "CASCADE",
     },
-    updatedAt: DataTypes.DATE,
-    createdAt: DataTypes.DATE,
   });
 };

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define(
-    "users",
+    "Therapists",
     {
       id: {
         type: DataTypes.UUID,
@@ -8,26 +8,39 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      fullName: DataTypes.STRING,
+      full_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: false,
       },
-      isEmailVerified: {
+      verified_email: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.ENUM("admin", "therapist", "client"),
+      account_status: {
+        type: DataTypes.ENUM("active", "inactive", "blocked"),
         allowNull: false,
       },
-      imgPath: DataTypes.STRING,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      rate_per_hour: DataTypes.FLOAT,
+      availability: DataTypes.JSON,
+      /**
+       * {
+       *  days: ["sunday", "tuesday"],
+       *  time: [morning, mid_day, evening]
+       * }
+       */
+      profile_picture: DataTypes.STRING,
+      gender: DataTypes.ENUM("male", "female"),
+      country: DataTypes.STRING,
     },
     {
       defaultScope: {
@@ -40,9 +53,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       hooks: {
         beforeValidate(model) {
-          model.fullName = model.fullName.toLowerCase();
+          model.full_name = model.full_name.toLowerCase();
         },
       },
-    },
+    }
   );
 };

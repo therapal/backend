@@ -1,19 +1,34 @@
 "use strict";
-
 const fs = require("fs");
 const path = require("path");
 const Sequelize = require("sequelize");
+// eslint-disable-next-line no-undef
 const basename = path.basename(__filename);
-const config = require("../config/index.js");
+const { DATABASE } = require("../config/index.js");
+
 const db = {};
 
 const sequelize = new Sequelize(
-  config.database.database,
-  config.database.username,
-  config.database.password,
-  config.database,
+  DATABASE.database,
+  DATABASE.username,
+  DATABASE.password,
+  DATABASE,
+  {
+    define: {
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: "updated_at",
+    },
+    pool: {
+      max: 1000,
+      min: 0,
+      acquire: 60000,
+      idle: 10000,
+    },
+  }
 );
 
+// eslint-disable-next-line no-undef
 fs.readdirSync(__dirname)
   .filter((file) => {
     return (
@@ -24,9 +39,10 @@ fs.readdirSync(__dirname)
     );
   })
   .forEach((file) => {
+    // eslint-disable-next-line no-undef
     const model = require(path.join(__dirname, file))(
       sequelize,
-      Sequelize.DataTypes,
+      Sequelize.DataTypes
     );
     db[model.name] = model;
   });
@@ -38,71 +54,43 @@ Object.keys(db).forEach((modelName) => {
 });
 
 const {
-  appointments: Appointment,
-  categories: Category,
-  languages: Language,
-  messages: Message,
-  notifications: Notification,
-  preferences: Preference,
-  preferredLanguages: PreferredLanguage,
-  profiles: Profile,
-  reviews: Review,
-  specialisations: Specialisation,
-  tokens: Token,
-  transactions: Transaction,
-  users: User,
+  Appointments,
+  Categories,
+  Messages,
+  Reviews,
+  Payments,
+  Invoices,
+  TherapistCategories,
+  Therapists,
+  Clients,
 } = db;
 
-User.hasMany(Message, { foreignKey: "clientId" });
-Message.belongsTo(User, { foreignKey: "clientId" });
+Therapists.hasMany(Appointments, { foreignKey: "therapist_id" });
+Appointments.Therapists(User, { foreignKey: "therapist_id" });
 
-User.hasMany(Message, { foreignKey: "therapistId" });
-Message.belongsTo(User, { foreignKey: "therapistId" });
+Therapists.hasMany(Reviews, { foreignKey: "therapist_id" });
+Reviews.Therapists(User, { foreignKey: "therapist_id" });
 
-User.hasMany(Appointment, { foreignKey: "userId" });
-Appointment.belongsTo(User, { foreignKey: "userId" });
+Therapists.hasMany(TherapistCategories, { foreignKey: "therapist_id" });
+TherapistCategories.Therapists(User, { foreignKey: "therapist_id" });
 
-User.hasMany(Notification, { foreignKey: "userId" });
-Notification.belongsTo(User, { foreignKey: "userId" });
+Categories.hasMany(TherapistCategories, { foreignKey: "category_id" });
+TherapistCategories.Categories(User, { foreignKey: "category_id" });
 
-User.hasMany(Token, { foreignKey: "userId" });
-Token.belongsTo(User, { foreignKey: "userId" });
+Clients.hasMany(Appointments, { foreignKey: "client_id" });
+Appointments.Clients(User, { foreignKey: "client_id" });
 
-User.hasOne(Profile, { foreignKey: "userId" });
-Profile.belongsTo(User, { foreignKey: "userId" });
+Clients.hasMany(Reviews, { foreignKey: "client_id" });
+Reviews.Clients(User, { foreignKey: "client_id" });
 
-User.hasMany(Preference, { foreignKey: "userId" });
-Preference.belongsTo(User, { foreignKey: "userId" });
+Appointments.hasMany(Messages, { foreignKey: "appointment_id" });
+Messages.belongsTo(Appointments, { foreignKey: "appointment_id" });
 
-User.hasMany(Review, { foreignKey: "clientId" });
-Review.belongsTo(User, { foreignKey: "clientId" });
+Payments.hasOne(Invoices, { foreignKey: "invoice_id" });
+Invoices.belongsTo(Payments, { foreignKey: "invoice_id" });
 
-User.hasMany(Review, { foreignKey: "therapistId" });
-Review.belongsTo(User, { foreignKey: "therapistId" });
-
-Appointment.hasOne(Transaction, { foreignKey: "appointmentId" });
-Transaction.belongsTo(Appointment, { foreignKey: "appointmentId" });
-
-Appointment.hasMany(Message, { foreignKey: "appointmentId" });
-Message.belongsTo(Appointment, { foreignKey: "appointmentId" });
-
-User.hasMany(Message, { foreignKey: "clientId" });
-Message.belongsTo(User, { foreignKey: "clientId" });
-
-User.hasMany(Message, { foreignKey: "therapistId" });
-Message.belongsTo(User, { foreignKey: "therapistId" });
-
-User.hasMany(PreferredLanguage, { foreignKey: "userId" });
-PreferredLanguage.belongsTo(User, { foreignKey: "userId" });
-
-Language.hasOne(PreferredLanguage, { foreignKey: "languageId" });
-PreferredLanguage.belongsTo(Language, { foreignKey: "languageId" });
-
-Category.hasOne(Specialisation, { foreignKey: "categoryId" });
-Specialisation.belongsTo(Category, { foreignKey: "categoryId" });
-
-User.hasMany(Specialisation, { foreignKey: "userId" });
-Specialisation.belongsTo(User, { foreignKey: "userId" });
+Payments.hasOne(Appointments, { foreignKey: "payment_id" });
+Appointments.belongsTo(Payments, { foreignKey: "payment_id" });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

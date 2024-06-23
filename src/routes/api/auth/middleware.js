@@ -9,7 +9,7 @@ module.exports.validateSigninCredentials = function (req, res, next) {
 };
 module.exports.validateSignupCredentials = function (req, res, next) {
   const { email, password, full_name } = req.body;
-  if ((!email || !password, full_name)) {
+  if (!email || !password || !full_name) {
     return next(new ApiError("Please complete your form to continue", 400));
   }
   const validPassword = checkPasswordStrength(password);

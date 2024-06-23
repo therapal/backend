@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         primaryKey: true,
       },
-      full_name: DataTypes.STRING,
+      full_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       email: {
         type: DataTypes.STRING,
         unique: true,
@@ -26,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       account_status: {
         type: DataTypes.ENUM("active", "inactive", "blocked"),
         allowNull: false,
+        defaultValue: "active",
       },
       gender: {
         type: DataTypes.ENUM("male", "female", "neutral"),

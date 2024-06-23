@@ -29,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       account_status: {
         type: DataTypes.ENUM("active", "inactive", "blocked"),
         allowNull: false,
+        defaultValue: "active",
       },
       rate_per_hour: DataTypes.FLOAT,
       availability: DataTypes.JSON,

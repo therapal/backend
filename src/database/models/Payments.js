@@ -6,9 +6,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    /**
-      BEFORE CONFIRMING A STATUS, CHECK THE PAYMENT GATEWAY TO KNOW THE STATUS
-      */
     gateway_status: {
       type: DataTypes.ENUM(
         "pending",
@@ -31,14 +28,29 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    invoice_id: {
-      type: DataTypes.UUID,
-      references: {
-        model: "Invoices",
-        key: "id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
+    billing_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    billing_address: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    billing_city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    billing_state: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    billing_zip: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    billing_country: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     client_id: {
       type: DataTypes.UUID,

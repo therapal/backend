@@ -1,23 +1,34 @@
-const { createLogger, format, transports, config } = require("winston");
-const { combine, timestamp, label, printf } = format;
+const { createLogger, format, transports } = require("winston");
+const { combine, timestamp, printf } = format;
+const path = require("path");
 const { NODE_ENV } = require("../config");
 
-const myFormat = printf(({ level, message, label, timestamp }) => {
-  return `[${label}] ${level}: ${message} ${timestamp}`;
+// Define the log format
+const logFormat = printf(({ level, message, timestamp, stack }) => {
+  return `${timestamp} ${level}: ${message}\n${stack || ""}`;
 });
 
-const transportsObject = {
-  console: new transports.Console({ level: "debug" }),
-};
-
-const logger = createLogger({
-  levels: config.syslog.levels,
-  format: combine(
-    timestamp(),
-    label({ label: NODE_ENV === "development" ? "dev log" : "prod log" }),
-    myFormat,
-  ),
-  transports: [transportsObject.console],
+const development = createLogger({
+  format: combine(timestamp(), format.errors({ stack: true }), logFormat),
+  transports: [
+    new transports.Console({
+      format: format.simple(),
+    }),
+  ],
 });
+
+const production = createLogger({
+  format: combine(timestamp(), format.errors({ stack: true }), logFormat),
+  transports: [
+    new transports.File({
+      // eslint-disable-next-line no-undef
+      filename: path.join(__dirname, "../../logs/critical-error-logs.log"),
+      format: combine(timestamp(), format.errors({ stack: true }), logFormat),
+      level: "error", // Log only errors
+    }),
+  ],
+});
+
+const logger = NODE_ENV === "development" ? development : production;
 
 module.exports = logger;

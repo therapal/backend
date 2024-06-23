@@ -1,8 +1,7 @@
-const {Router} = require("express");
+const { Router } = require("express");
 const router = Router();
-const controller = require("./controller.js")
+const controller = require("./controller.js");
 
-router.post("/", controller.createAppointment)
-router.post("/verify/:trxRef", controller.verifyAppointment);
+router.post("/", controller.createAppointment);
 
 module.exports = router;

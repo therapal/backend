@@ -3,58 +3,52 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("messages", {
+    await queryInterface.createTable("Messages", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      appointmentId: {
+      appointment_id: {
         type: DataTypes.UUID,
         references: {
-          model: "appointments",
+          model: "Appointments",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      sender: {
+      sender_id: {
         type: DataTypes.UUID,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        allowNull: false,
       },
-      receiver: {
+      receiver_id: {
         type: DataTypes.UUID,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        allowNull: false,
       },
-      mediaType: {
-        type: DataTypes.ENUM("image", "none"),
-        defaultValue: "none",
+      content: {
+        type: DataTypes.TEXT,
+        allowNull: false,
       },
+      content_type: {
+        type: DataTypes.ENUM("image", "text"),
+        allowNull: false,
+      },
+      reply_to_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+      },
+      read_at: DataTypes.DATE,
       mediaPath: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      text: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      metadata: DataTypes.JSON,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("messages");
+    await queryInterface.dropTable("Messages");
   },
 };

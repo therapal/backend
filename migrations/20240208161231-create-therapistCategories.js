@@ -3,37 +3,29 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("specialisations", {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        allowNull: false,
-        primaryKey: true,
-      },
-      userId: {
+    await queryInterface.createTable("TherapistCategories", {
+      therapist_id: {
         type: DataTypes.UUID,
         references: {
-          model: "users",
+          model: "Therapists",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      categoryId: {
+      category_id: {
         type: DataTypes.UUID,
         references: {
-          model: "categories",
+          model: "Categories",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      updatedAt: DataTypes.DATE,
-      createdAt: DataTypes.DATE,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("specialisations");
+    await queryInterface.dropTable("TherapistCategories");
   },
 };

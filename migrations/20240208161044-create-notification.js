@@ -3,24 +3,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("notifications", {
+    await queryInterface.createTable("Notifications", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      userId: {
+      owner_id: {
         type: DataTypes.UUID,
-        references: {
-          model: "users",
-          key: "id",
-        },
-        onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        allowNull: false,
       },
-      type: {
-        type: DataTypes.ENUM("appointment", "auth", "user", "payment"),
+      tags: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
       read: {
@@ -29,12 +24,10 @@ module.exports = {
         defaultValue: false,
       },
       content: DataTypes.TEXT,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("notifications");
+    await queryInterface.dropTable("Notifications");
   },
 };

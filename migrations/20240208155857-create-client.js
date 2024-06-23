@@ -3,37 +3,46 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("users", {
+    await queryInterface.createTable("Clients", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      fullName: DataTypes.STRING,
+      full_name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       email: {
         type: DataTypes.STRING,
         unique: true,
+        allowNull: false,
       },
-      isEmailVerified: {
+      verified_email: {
         type: DataTypes.BOOLEAN,
+        allowNull: false,
         defaultValue: false,
       },
       password: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      role: {
-        type: DataTypes.ENUM("admin", "therapist", "client"),
+      account_status: {
+        type: DataTypes.ENUM("active", "inactive", "blocked"),
         allowNull: false,
+        defaultValue: "active",
       },
-      imgPath: DataTypes.STRING,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
+      gender: {
+        type: DataTypes.ENUM("male", "female", "neutral"),
+        allowNull: false,
+        defaultValue: "neutral",
+      },
+      profile_picture: DataTypes.STRING,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("users");
+    await queryInterface.dropTable("Clients");
   },
 };

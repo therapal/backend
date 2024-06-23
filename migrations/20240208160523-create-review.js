@@ -3,26 +3,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
-    await queryInterface.createTable("reviews", {
+    await queryInterface.createTable("Reviews", {
       id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         allowNull: false,
         primaryKey: true,
       },
-      therapistId: {
+      therapist_id: {
         type: DataTypes.UUID,
         references: {
-          model: "users",
+          model: "Therapists",
           key: "id",
         },
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
       },
-      clientId: {
+      client_id: {
         type: DataTypes.UUID,
         references: {
-          model: "users",
+          model: "Clients",
           key: "id",
         },
         onUpdate: "CASCADE",
@@ -30,12 +30,10 @@ module.exports = {
       },
       rating: DataTypes.INTEGER,
       content: DataTypes.TEXT,
-      createdAt: DataTypes.DATE,
-      updatedAt: DataTypes.DATE,
     });
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable("reviews");
+    await queryInterface.dropTable("Reviews");
   },
 };

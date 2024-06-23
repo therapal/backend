@@ -5,5 +5,9 @@ class ApiError extends Error {
     this.name = "ApiError";
   }
 }
-
-module.exports = { ApiError };
+function catchAsyncErrors(fn) {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+module.exports = { ApiError, catchAsyncErrors };

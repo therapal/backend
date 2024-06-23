@@ -26,6 +26,11 @@ module.exports.NO_REPLY_MAIL_CONFIG = {
   pass: process.env.NO_REPLY_MAIL_PASS,
 };
 
+module.exports.THERAPIST_JWT_SECRET = process.env.THERAPIST_JWT_SECRET;
+module.exports.CLIENT_JWT_SECRET = process.env.CLIENT_JWT_SECRET;
+
+module.exports.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS;
+
 module.exports.MAIL_CONFIG = {
   host: process.env.MAIL_HOST,
   port: process.env.MAIL_PORT,

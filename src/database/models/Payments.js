@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
         "processing",
         "queued",
         "reversed",
-        "failed"
+        "failed",
       ),
       defaultValue: "pending",
     },

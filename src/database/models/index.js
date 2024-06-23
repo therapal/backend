@@ -25,7 +25,7 @@ const sequelize = new Sequelize(
       acquire: 60000,
       idle: 10000,
     },
-  }
+  },
 );
 
 // eslint-disable-next-line no-undef
@@ -42,7 +42,7 @@ fs.readdirSync(__dirname)
     // eslint-disable-next-line no-undef
     const model = require(path.join(__dirname, file))(
       sequelize,
-      Sequelize.DataTypes
+      Sequelize.DataTypes,
     );
     db[model.name] = model;
   });

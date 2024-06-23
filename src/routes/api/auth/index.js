@@ -13,23 +13,23 @@ router.use("*", authLimiter);
 router.post(
   "/signin/therapist",
   validateSigninCredentials,
-  catchAsyncErrors(controller.signinTherapist)
+  catchAsyncErrors(controller.signinTherapist),
 );
 
 router.post(
   "/signin/client",
   validateSigninCredentials,
-  catchAsyncErrors(controller.signinClient)
+  catchAsyncErrors(controller.signinClient),
 );
 
 router.post(
   "/signup/therapist",
   validateSignupCredentials,
-  catchAsyncErrors(controller.signupTherapist)
+  catchAsyncErrors(controller.signupTherapist),
 );
 
 router.post(
   "/signup/client",
   validateSignupCredentials,
-  catchAsyncErrors(controller.signupClient)
+  catchAsyncErrors(controller.signupClient),
 );

@@ -34,7 +34,7 @@ async function uploadImagesToBucket(files, bucketName) {
           Bucket: "assets",
           Key: bucketName + "/" + name,
           Body: createReadStream(file.filepath),
-        })
+        }),
       );
       return name;
     } catch (err) {

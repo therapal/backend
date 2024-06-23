@@ -28,7 +28,7 @@ function morganConfig() {
     join(__dirname, "../../logs/api-errors.log"),
     {
       flags: "a",
-    }
+    },
   );
 
   return morgan(
@@ -63,7 +63,7 @@ function morganConfig() {
         return res.statusCode < 400;
       },
       stream: NODE_ENV === "production" ? accessLogStream : null,
-    }
+    },
   );
 }
 

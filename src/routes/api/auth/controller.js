@@ -21,7 +21,7 @@ module.exports.signinTherapist = async function (req, res, next) {
   const token = jwt.sign(
     { role: "therapist", user_id: user.id },
     THERAPIST_JWT_SECRET,
-    "60 mins"
+    "60 mins",
   );
   res.status(200).json({
     success: true,
@@ -104,7 +104,7 @@ module.exports.signinClient = async function (req, res, next) {
   const token = jwt.sign(
     { role: "client", user_id: user.id },
     CLIENT_JWT_SECRET,
-    "60 mins"
+    "60 mins",
   );
   res.status(200).json({
     success: true,

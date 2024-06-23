@@ -35,7 +35,7 @@ module.exports = {
           "fixed",
           "active",
           "inactive",
-          "declined"
+          "declined",
         ),
         allowNull: false,
         defaultValue: "pending",

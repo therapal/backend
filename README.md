@@ -5,6 +5,7 @@
 Welcome to the Therapal backend repository! This repository contains the backend code for the Therapal project, an application focused on mental health and well-being.
 
 ## API Docs
+
 https://documenter.getpostman.com/view/32427553/2s9Yyy7Hpc
 
 ## Technologies Used

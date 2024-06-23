@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         "fixed",
         "active",
         "inactive",
-        "declined"
+        "declined",
       ),
       allowNull: false,
       defaultValue: "pending",

@@ -52,6 +52,6 @@ module.exports = (sequelize, DataTypes) => {
           model.full_name = model.full_name.toLowerCase();
         },
       },
-    }
+    },
   );
 };

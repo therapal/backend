@@ -19,7 +19,7 @@ module.exports = {
           "processing",
           "queued",
           "reversed",
-          "failed"
+          "failed",
         ),
         defaultValue: "pending",
       },

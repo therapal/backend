@@ -1,10 +1,10 @@
-const {Router} = require("express");
+const { Router } = require("express");
 const router = Router();
-const controller = require("./controller.js")
+const controller = require("./controller.js");
 
-router.post("/", controller.createCategory)
-router.get("/", controller.getAllCategory)
+router.post("/", controller.createCategory);
+router.get("/", controller.getAllCategory);
 
-router.get("/:id/therapist", controller.getAllTherapistsInCategory)
+router.get("/:id/therapist", controller.getAllTherapistsInCategory);
 
 module.exports = router;

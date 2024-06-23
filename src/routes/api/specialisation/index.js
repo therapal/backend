@@ -1,8 +1,8 @@
-const {Router} = require("express");
+const { Router } = require("express");
 const router = Router();
 
-const controller = require("./controller.js")
+const controller = require("./controller.js");
 
-router.put("/", controller.addSpecialisation)
+router.put("/", controller.addSpecialisation);
 
 module.exports = router;
